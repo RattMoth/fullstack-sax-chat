@@ -1,31 +1,21 @@
-import React from 'react';
-import { BrowserRouter, Route, Switch } from 'react-router-dom';
-import Admin from './components/Admin/Admin';
+import React, { useContext, useEffect } from 'react';
 import Login from './components/Login/Login';
 import Main from './components/Main/Main';
 import './App.css';
-import { AuthContextProvider } from './stores/authContext';
+import AuthContext from './stores/authContext';
 
 function App() {
+  const { user, login, authReady } = useContext(AuthContext);
+
+  console.log('user: ', user);
+  console.log('authReady: ', authReady);
+
   return (
-    <AuthContextProvider>
-      <div className="wrapper">
-        <h1>App go here</h1>
-        <BrowserRouter>
-          <Switch>
-            <Route path="/admin">
-              <Admin />
-            </Route>
-            <Route path="/main">
-              <Main />
-            </Route>
-            <Route path="/login">
-              <Login />
-            </Route>
-          </Switch>
-        </BrowserRouter>
-      </div>
-    </AuthContextProvider>
+    <div className="wrapper">
+      <h1>Header</h1>
+      {/* Don't display anything until authReady has loaded, then conditionally display page based on logged-in status */}
+      {authReady && <div>{!user ? <Login /> : <Main />}</div>}
+    </div>
   );
 }
 

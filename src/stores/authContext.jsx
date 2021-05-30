@@ -9,19 +9,50 @@ const AuthContext = createContext({
 });
 
 export function AuthContextProvider({ children }) {
-  // eslint-disable-next-line no-unused-vars
-  const [user, setUser] = useState('matt');
+  const [user, setUser] = useState(null);
+  const [authReady, setAuthReady] = useState(false);
 
   useEffect(() => {
+    // Baked-in event listener. Fires on user login
+    netlifyIdentity.on('login', (returnedUser) => {
+      // function returns the logged in user from netllify
+      setUser(returnedUser);
+      netlifyIdentity.close();
+      console.info('login event');
+      console.log(returnedUser);
+    });
+
+    netlifyIdentity.on('logout', () => {
+      setUser(null);
+      console.info('logout event');
+    });
+
+    netlifyIdentity.on('init', (returnedUser) => {
+      setUser(returnedUser);
+      setAuthReady(true);
+    });
+
     // init netlify identity connection on component load
     netlifyIdentity.init();
+
+    // functions returned in useEffect fire when component unmounts
+    return () => {
+      // Deregester event listeners if component unmounts to prevent
+      // duplicates. Prob unnecessary in this app, but it's good practice
+      netlifyIdentity.off('login');
+      netlifyIdentity.off('logout');
+    };
   }, []);
 
   const login = () => {
     netlifyIdentity.open();
   };
 
-  const context = { user, login };
+  const logout = () => {
+    netlifyIdentity.logout();
+  };
+
+  const context = { user, login, logout, authReady };
 
   return (
     <AuthContext.Provider value={context}>{children}</AuthContext.Provider>
