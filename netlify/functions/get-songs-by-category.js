@@ -22,7 +22,7 @@ const client = new faunadb.Client({
   secret: process.env.FAUNADB_SECRET_DEV,
 });
 
-// GET /.netlify/functions/get-songs-by-category.js?category=Disney
+// GET /.netlify/functions/get-songs-by-category?category=Disney
 exports.handler = async (event, context, callback) => {
   if (!event.queryStringParameters.category) {
     return {
@@ -31,8 +31,12 @@ exports.handler = async (event, context, callback) => {
     };
   }
   const { category } = event.queryStringParameters;
-  console.log(category);
-  console.log('Function `todo-read-all` invoked');
+  console.log('event: ', event);
+  console.log('context: ', context);
+  console.log('callback: ', callback);
+  const { identity, user } = context.clientContext;
+  console.log('identity: ', identity);
+  console.log('user', user);
   return client
     .query(
       Paginate(
@@ -55,7 +59,7 @@ exports.handler = async (event, context, callback) => {
     .catch((error) => {
       console.log('error', error);
       return {
-        statusCode: 400,
+        statusCode: 500,
         body: JSON.stringify(error),
       };
     });
