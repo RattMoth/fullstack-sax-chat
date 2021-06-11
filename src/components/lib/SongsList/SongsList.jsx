@@ -1,5 +1,4 @@
-/* eslint-disable no-unused-vars */
-import React, { useEffect } from 'react';
+import React, { useContext, useEffect } from 'react';
 import './SongsList.css';
 import {
   List,
@@ -8,14 +7,16 @@ import {
   ListItemText,
   Checkbox,
 } from '@material-ui/core';
+import SetlistContext from '../../../stores/setlistContext';
 
 export default function SongsList(props) {
-  const [checked, setChecked] = React.useState([0]);
+  const { setlistSongs, setSetlistSongs } = useContext(SetlistContext);
+
   const { category } = props;
 
   const handleToggle = (value) => () => {
-    const currentIndex = checked.indexOf(value);
-    const newChecked = [...checked];
+    const currentIndex = setlistSongs.indexOf(value);
+    const newChecked = [...setlistSongs];
 
     if (currentIndex === -1) {
       newChecked.push(value);
@@ -23,16 +24,61 @@ export default function SongsList(props) {
       newChecked.splice(currentIndex, 1);
     }
 
-    setChecked(newChecked);
+    setSetlistSongs(newChecked);
   };
 
   const arr =
-    category === 'Anime'
+    category === 'Video Games'
       ? [
-          1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 19, 9, 10,
-          11, 12, 13, 14, 15, 16, 17, 19, 11, 12, 13, 14, 15, 16, 17, 19, 11,
-          12, 13, 14, 15, 16, 17, 19, 11, 12, 13, 14, 15, 16, 17, 19, 11, 12,
-          13, 14, 15, 16, 17, 19,
+          'Animal Crossing',
+
+          'Animal Crossing Medley',
+
+          'Animal Crossing - 5 PM',
+
+          'Animal Crossing - 7 AM',
+
+          'Animal Crossing - Lucky K.K.',
+
+          'Animal Crossing: City Folk - Nook N’ Go',
+
+          'Animal Crossing: New Horizons - Main Theme',
+
+          'Animal Crossing: New Horizons - 10AM-12PM',
+
+          'Banjo Kazooie - Gruntilda’s Lair',
+
+          'Banjo Kazooie - Title Theme',
+
+          'Castlevania 2 - Bloody Tears',
+
+          'Civilization - Baba Yetu',
+
+          'Chrono Cross - Time’s Scar',
+
+          'Chrono Trigger - Millenial Fair',
+
+          'Chrono Trigger - Wind Scene (600 A.D.)',
+
+          'Deltarune - Scarlet Fever',
+
+          'Donkey Kong 64 - Jungle Japes',
+
+          'Donkey Kong Country - Donkey Kong’s Big Day',
+
+          'Donkey Kong Country GBC - Voice of the Temple',
+
+          'Donkey Kong Country 2 Medley',
+
+          'Dragon Quest Overture',
+
+          'Dragon Quest Royalty Suite',
+
+          'Dragon Quest III - Adventure',
+
+          'Earthbound - Fourside',
+
+          'F-Zero - Big Blue',
         ]
       : [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
 
@@ -52,13 +98,13 @@ export default function SongsList(props) {
             <ListItemIcon>
               <Checkbox
                 edge="start"
-                checked={checked.indexOf(value) !== -1}
+                checked={setlistSongs.indexOf(value) !== -1}
                 tabIndex={-1}
                 disableRipple
                 inputProps={{ 'aria-labelledby': labelId }}
               />
             </ListItemIcon>
-            <ListItemText id={labelId} primary={`Line item ${value}`} />
+            <ListItemText id={labelId} primary={value} />
           </ListItem>
         );
       })}
