@@ -8,13 +8,12 @@ function App() {
   const { user, login, authReady } = useContext(AuthContext);
 
   console.log('user: ', user);
-  console.log('authReady: ', authReady);
 
   return (
-    <div className="wrapper">
-      <h1>Header</h1>
+    <div>
       {/* Don't display anything until authReady has loaded, then conditionally display page based on logged-in status */}
       {authReady && <div>{!user ? <Login /> : <Main />}</div>}
+      {/* TODO maybe build loading indicator if load time is longer than n seconds */}
     </div>
   );
 }
