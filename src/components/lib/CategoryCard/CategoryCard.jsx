@@ -23,7 +23,7 @@ export default function CategoryCard(props) {
   };
 
   return (
-    <Card className="idk" id="categoryCardContainer">
+    <Card id="categoryCard">
       <CardHeader
         id="cardHeader"
         action={

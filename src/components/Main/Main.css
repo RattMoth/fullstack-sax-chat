@@ -29,7 +29,10 @@ article {
   justify-content: flex-start;
 }
 
-header,
+header {
+  justify-content: stretch;
+}
+
 aside,
 footer {
   background: #eaeaea;

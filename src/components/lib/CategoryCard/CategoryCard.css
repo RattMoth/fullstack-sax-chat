@@ -1,6 +1,7 @@
-#categoryCardContainer {
-  /* width: 50vw; */
-  /* height: 25vh; */
+#categoryCard {
+  margin: 1rem;
+  max-width: 90vw;
+  align-self: flex-start;
 }
 
 #cardHeader {
