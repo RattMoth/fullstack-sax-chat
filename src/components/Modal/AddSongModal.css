@@ -1,0 +1,16 @@
+#category-select {
+  background-color: rgba(0, 0, 0, 0.09);
+  /* width: 25ch; */
+  border-radius: 4px;
+  margin-top: 1rem;
+  padding: 1rem;
+}
+
+#button-flex-container {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.modal-cancel-button {
+  margin-right: 1rem !important;
+}

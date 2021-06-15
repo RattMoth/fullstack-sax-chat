@@ -123,6 +123,7 @@ export default function SongsList(props) {
           );
         })
       ) : (
+        // Todo reenable loading spinner
         // <ReactLoading type="spin" color="#3f51b5" />
         <div>still loadin</div>
       )}

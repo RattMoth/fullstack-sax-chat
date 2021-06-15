@@ -22,18 +22,16 @@ const client = new faunadb.Client({
   secret: process.env.FAUNADB_SECRET_DEV,
 });
 
-// POST /.netlify/functions/create-song?category=Disney&name=Be+Our+Guest
+// POST /.netlify/functions/create-song/
 exports.handler = async (event, context, callback) => {
-  if (
-    !event.queryStringParameters.category ||
-    !event.queryStringParameters.name
-  ) {
+  const bodyData = JSON.parse(event.body);
+  if (!bodyData.category || !bodyData.name) {
     return {
       statusCode: 400,
       body: 'Missing query parameter',
     };
   }
-  const { category, name } = event.queryStringParameters;
+  const { category, name } = bodyData;
 
   return client
     .query(
@@ -49,7 +47,7 @@ exports.handler = async (event, context, callback) => {
       })
     )
     .then((response) => {
-      const newSong = response.data;
+      const newSong = response.data.songName;
       // console.log('Songs in queried category', song);
       // console.log(`${.length} songs found`);
       console.log('Create response: ', response);
@@ -60,6 +58,12 @@ exports.handler = async (event, context, callback) => {
       };
     })
     .catch((error) => {
+      if (error.description === 'document is not unique.') {
+        return {
+          statusCode: 400,
+          body: 'Duplicate entry not allowed.',
+        };
+      }
       console.log('error', error);
       return {
         statusCode: 500,

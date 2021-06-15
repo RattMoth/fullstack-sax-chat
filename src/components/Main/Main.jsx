@@ -12,18 +12,19 @@ export default function Main() {
   const [categories, setCategories] = useState(undefined);
 
   // TODO reactivate this. Disabled to prevent extra DB calls
-  // useEffect(() => {
-  //   fetch('/.netlify/functions/get-all-categories')
-  //     .then((res) => res.json())
-  //     .then((data) => setCategories(data))
-  //     // eslint-disable-next-line no-console
-  //     .catch((error) => console.error);
-  // }, []);
+  useEffect(() => {
+    // fetch('/.netlify/functions/get-all-categories')
+    //   .then((res) => res.json())
+    //   .then((data) => setCategories(data))
+    //   // eslint-disable-next-line no-console
+    //   .catch((error) => console.error);
+    setCategories(['Anime', 'Disney', 'TV and Movies', 'Video Games']);
+  }, []);
 
   return (
     <div id="mainContainer" className="grid">
       <header>
-        <Navbar />
+        <Navbar categories={categories} />
       </header>
 
       <aside className="sidebar-left">
