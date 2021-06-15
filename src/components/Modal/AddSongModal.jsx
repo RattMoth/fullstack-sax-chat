@@ -7,9 +7,10 @@ import TextField from '@material-ui/core/TextField';
 import MenuItem from '@material-ui/core/MenuItem';
 import Button from '@material-ui/core/Button';
 import ReactLoading from 'react-loading';
-import Snackbar from '@material-ui/core/Snackbar';
-import MuiAlert from '@material-ui/lab/Alert';
+import usePopup from '../lib/Popup/usePopup';
+import Popup from '../lib/Popup/Popup';
 import './AddSongModal.css';
+import { severityEnum } from '../lib/enums/severityEnum';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -32,11 +33,12 @@ const useStyles = makeStyles((theme) => ({
 
 export default function AddSongModal(props) {
   const classes = useStyles();
-  const { categories, open, handleClose } = props;
+  const { categories, open, handleModalClose } = props;
   const [newSongName, setNewSongName] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('');
   const [loading, setLoading] = useState(false);
   const [returnedError, setReturnedError] = useState(false);
+  const { visible, handlePopupOpen, handlePopupClose } = usePopup();
 
   const handleSongNameChange = (e) => {
     if (returnedError) {
@@ -47,6 +49,14 @@ export default function AddSongModal(props) {
 
   const handleCategorySelect = (e) => {
     setSelectedCategory(e.target.value);
+  };
+
+  const handleClose = (e) => {
+    e.preventDefault();
+    handlePopupClose();
+    handleModalClose();
+    setSelectedCategory('');
+    setNewSongName('');
   };
 
   const handleSubmit = (e) => {
@@ -66,6 +76,7 @@ export default function AddSongModal(props) {
           setReturnedError(true);
         } else {
           setNewSongName('');
+          handlePopupOpen();
         }
       })
       .catch((error) => {
@@ -89,6 +100,12 @@ export default function AddSongModal(props) {
       >
         <Fade in={open}>
           <div className={classes.paper}>
+            <Popup
+              handlePopupClose={handlePopupClose}
+              message="Song Successfully Added"
+              severity={severityEnum.SUCCESS}
+              visible={visible}
+            />
             <h2 id="transition-modal-title">Add Song</h2>
             <p id="transition-modal-description">
               Enter song name and select category from the dropdown.

@@ -83,12 +83,11 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function Navbar(props) {
+export default function Navbar({ categories }) {
   const { user, login } = useContext(AuthContext);
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const classes = useStyles();
   const menuId = 'primary-search-account-menu';
-  const { categories } = props;
 
   const handleModalOpen = () => {
     setModalIsOpen(true);
@@ -104,7 +103,7 @@ export default function Navbar(props) {
       <AddSongModal
         categories={categories}
         open={modalIsOpen}
-        handleClose={handleModalClose}
+        handleModalClose={handleModalClose}
       />
       {/* End modal */}
       <AppBar position="static">

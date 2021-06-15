@@ -10,10 +10,9 @@ import {
 } from '@material-ui/core';
 import SetlistContext from '../../../stores/setlistContext';
 
-export default function SongsList(props) {
+export default function SongsList({ category }) {
   const { setlistSongs, setSetlistSongs } = useContext(SetlistContext);
   const [fetchedSongs, setFetchedSongs] = useState();
-  const { category } = props;
   const categoryURL = category.replaceAll(' ', '+');
 
   // TODO reactivate this. Disabled to prevent extra DB calls

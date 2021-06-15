@@ -14,9 +14,8 @@ import Box from '@material-ui/core/Box';
 import SongsList from '../SongsList/SongsList';
 import './CategoryCard.css';
 
-export default function CategoryCard(props) {
+export default function CategoryCard({ category }) {
   const [expanded, setExpanded] = React.useState(true);
-  const { category } = props;
 
   const handleExpandClick = () => {
     setExpanded(!expanded);
