@@ -8,17 +8,42 @@ import './Main.css';
 
 export default function Main() {
   // const { user, login } = useContext(AuthContext);
+  const [allSongsObj, setAllSongsObj] = useState({});
   const { setlistSongs, setSetlistSongs } = useContext(SetlistContext);
-  const [categories, setCategories] = useState(undefined);
+  const [categories, setCategories] = useState([]);
 
-  // TODO reactivate this. Disabled to prevent extra DB calls
   useEffect(() => {
-    // fetch('/.netlify/functions/get-all-categories')
-    //   .then((res) => res.json())
-    //   .then((data) => setCategories(data))
-    //   // eslint-disable-next-line no-console
-    //   .catch((error) => console.error);
-    setCategories(['Anime', 'Disney', 'TV and Movies', 'Video Games']);
+    // fetch categories, await value, store in state
+    // once categories are stored, iterate over state array and fetch songs
+
+    const fetchData = async () => {
+      // Fetch categories and wait for array to be returned
+      const categoriesRes = await fetch(
+        '/.netlify/functions/get-all-categories'
+      );
+      const categoriesArr = await categoriesRes.json();
+      // eslint-disable-next-line no-debugger
+      debugger;
+      setCategories([...categoriesArr]);
+
+      // Now that categories are loaded, iterate through array and fetch songs
+      // eslint-disable-next-line no-restricted-syntax
+      for (const category of categoriesArr) {
+        const categoryURL = category.replaceAll(' ', '+');
+        // eslint-disable-next-line no-await-in-loop
+        const songsByCategoryRes = await fetch(
+          `/.netlify/functions/get-songs-by-category?category=${categoryURL}`
+        );
+        // eslint-disable-next-line no-await-in-loop
+        const songsArr = await songsByCategoryRes.json();
+
+        allSongsObj[category] = [...songsArr];
+        setAllSongsObj({ ...allSongsObj });
+      }
+    };
+
+    fetchData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
@@ -40,7 +65,9 @@ export default function Main() {
 
       <article>
         {categories ? (
-          categories.map((category) => <CategoryCard category={category} />)
+          categories.map((category) => (
+            <CategoryCard category={category} songs={allSongsObj[category]} />
+          ))
         ) : (
           // <ReactLoading type="spin" color="#3f51b5" />
           <div>still loadin</div>

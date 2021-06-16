@@ -48,8 +48,6 @@ exports.handler = async (event, context, callback) => {
     )
     .then((response) => {
       const newSong = response.data.songName;
-      // console.log('Songs in queried category', song);
-      // console.log(`${.length} songs found`);
       console.log('Create response: ', response);
 
       return {

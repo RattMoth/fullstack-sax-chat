@@ -31,8 +31,7 @@ exports.handler = async (event, context, callback) =>
     .query(Paginate(Match(Index('all_categories'))))
     .then((response) => {
       const categories = response.data;
-      console.log('Songs in queried category', categories);
-      console.log(`${categories.length} songs found`);
+      console.log('Categories found', categories);
 
       return {
         statusCode: 200,

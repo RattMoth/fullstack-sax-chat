@@ -14,7 +14,7 @@ import Box from '@material-ui/core/Box';
 import SongsList from '../SongsList/SongsList';
 import './CategoryCard.css';
 
-export default function CategoryCard({ category }) {
+export default function CategoryCard({ category, songs }) {
   const [expanded, setExpanded] = React.useState(true);
 
   const handleExpandClick = () => {
@@ -34,7 +34,7 @@ export default function CategoryCard({ category }) {
       />
       <Collapse in={expanded} timeout="auto" unmountOnExit>
         <CardContent>
-          <SongsList category={category} />
+          <SongsList songs={songs} />
         </CardContent>
       </Collapse>
     </Card>

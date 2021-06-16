@@ -29,7 +29,7 @@ export default function Popup({
         autoHideDuration={3000}
         onClose={handlePopupClose}
       >
-        <MuiAlert elevation="6" variant="filled" severity={severity}>
+        <MuiAlert elevation={6} variant="filled" severity={severity}>
           {message}
         </MuiAlert>
       </Snackbar>
