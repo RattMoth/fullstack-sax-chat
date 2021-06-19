@@ -141,11 +141,11 @@ export default function AddSongModal({
               </TextField>
               <div id="button-flex-container">
                 <Button
-                  className="modal-cancel-button"
+                  className="modal-close-button"
                   onClick={handleClose}
                   variant="contained"
                 >
-                  Cancel
+                  Close
                 </Button>
                 <Button
                   color="primary"

@@ -10,6 +10,7 @@ const {
   Match,
   Select,
   Index,
+  Delete,
   Create,
   Collection,
   Update,
@@ -27,42 +28,32 @@ const client = new faunadb.Client({
 exports.handler = async (event, context, callback) => {
   const bodyData = JSON.parse(event.body);
   console.log(bodyData);
-  if (!bodyData.currentCategory && !bodyData.currentName) {
+  if (!bodyData.songToDelete) {
     return {
       statusCode: 400,
-      body: 'Needs at least one query paramater',
+      body: 'Missing query paramater',
     };
   }
-  const { currentCategory, newCategory, currentName, newName } = bodyData;
+  const { songToDelete } = bodyData;
 
   return client
     .query(
-      Update(Select('ref', Get(Match(Index('song_by_name'), currentName))), {
-        data: {
-          songName: newName || currentName,
-          category: Select(
-            'ref',
-            Get(
-              Match(Index('categories_by_name'), newCategory || currentCategory)
-            )
-          ),
-        },
-      })
+      Delete(Select('ref', Get(Match(Index('song_by_name'), songToDelete))))
     )
     .then((response) => {
-      const newSong = response.data.songName;
-      console.log('Update response: ', response);
+      const deletedSong = response.data.songName;
+      console.log('Delete response: ', response);
 
       return {
         statusCode: 201,
-        body: JSON.stringify(newSong),
+        body: JSON.stringify(deletedSong),
       };
     })
     .catch((error) => {
-      if (error.description === 'document is not unique.') {
+      if (error.description === 'instance not found') {
         return {
-          statusCode: 400,
-          body: 'Duplicate entry not allowed.',
+          statusCode: 404,
+          body: 'Song with that name was not found.',
         };
       }
       console.log('error', error);

@@ -44,6 +44,7 @@ export default function EditSongModal({
   const [selectedCategory, setSelectedCategory] = useState('');
   const [loading, setLoading] = useState(false);
   const [returnedError, setReturnedError] = useState(false);
+  const [wasDeleteAction, setWasDeleteAction] = useState(false);
   const { visible, handlePopupOpen, handlePopupClose } = usePopup();
 
   const handleSongNameChange = (e) => {
@@ -58,17 +59,14 @@ export default function EditSongModal({
     setSelectedCategory(e.target.value);
   };
 
-  const handleClose = (e) => {
-    e.preventDefault();
+  const handleClose = () => {
     handlePopupClose();
     handleModalClose();
     setSongNameInputValue('');
   };
 
   const handleSubmit = (e) => {
-    e.preventDefault();
-    console.log(selectedCategory);
-    console.log(songNameInputValue);
+    setWasDeleteAction(false);
     const songData = {
       currentName: currentSong,
       newName: songNameInputValue,
@@ -97,9 +95,31 @@ export default function EditSongModal({
   };
 
   const handleDeleteClick = (e) => {
+    setWasDeleteAction(true);
     // eslint-disable-next-line no-restricted-globals
     if (confirm(`Are you sure you want to delete ${songNameInputValue}`)) {
-      alert(`made delet of ${songNameInputValue}`);
+      const songData = { songToDelete: currentSong };
+      setLoading(true);
+      fetch(' /.netlify/functions/delete-song/', {
+        body: JSON.stringify(songData),
+        method: 'POST',
+      })
+        .then((res) => {
+          setLoading(false);
+          if (!res.ok) {
+            setReturnedError(true);
+          } else {
+            handleClose();
+            handlePopupOpen();
+            if (currentCategory !== selectedCategory) {
+              update(currentCategory);
+            }
+            update(selectedCategory);
+          }
+        })
+        .catch((error) => {
+          console.log(error);
+        });
     }
   };
 
@@ -110,6 +130,16 @@ export default function EditSongModal({
 
   return (
     <div>
+      <Popup
+        handlePopupClose={handlePopupClose}
+        message={
+          wasDeleteAction
+            ? 'Song Successfully Deleted'
+            : 'Song Successfully Updated'
+        }
+        severity={wasDeleteAction ? severityEnum.WARNING : severityEnum.SUCCESS}
+        visible={visible}
+      />
       <Modal
         aria-labelledby="transition-modal-title"
         aria-describedby="transition-modal-description"
@@ -124,12 +154,18 @@ export default function EditSongModal({
       >
         <Fade in={open}>
           <div className={classes.paper}>
-            <Popup
+            {/* <Popup
               handlePopupClose={handlePopupClose}
-              message="Song Successfully Updated"
-              severity={severityEnum.SUCCESS}
+              message={
+                wasDeleteAction
+                  ? 'Song Successfully Deleted'
+                  : 'Song Successfully Updated'
+              }
+              severity={
+                wasDeleteAction ? severityEnum.WARNING : severityEnum.SUCCESS
+              }
               visible={visible}
-            />
+            /> */}
             <h2 id="transition-modal-title">Edit Song</h2>
             <p id="transition-modal-description">
               Update song name and/or select a new category from the dropdown.
@@ -168,11 +204,11 @@ export default function EditSongModal({
                   Delete
                 </Button>
                 <Button
-                  className="modal-cancel-button"
+                  className="modal-close-button"
                   onClick={handleClose}
                   variant="contained"
                 >
-                  Cancel
+                  Close
                 </Button>
                 <Button
                   color="primary"

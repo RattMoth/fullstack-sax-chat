@@ -21,6 +21,7 @@ export default function CategoryCard({
   const [currentSong, setCurrentSong] = useState(undefined);
   const [expanded, setExpanded] = useState(true);
   const [modalIsOpen, setModalIsOpen] = useState(false);
+  const [flexOrder, setFlexOrder] = useState(0);
 
   const ExpandMore = styled((props) => {
     const { expand, ...other } = props;
@@ -35,7 +36,16 @@ export default function CategoryCard({
   }));
 
   const handleExpandClick = () => {
+    // This looks odd but let me explain: setting flexOrder to -1 moves the card to the beginning of the flex object (order: -1 in css), and setting it back to 0 puts it back in the original position.
+    // This function moves the card to the top when it is expanded, and waits for the "expand" animation to complete via settimeout.
+    // There may be a more elegant solution, but ¯\_(ツ)_/¯ it works for now and I'm doing this for free
+
     setExpanded(!expanded);
+    if (expanded) {
+      setTimeout(() => setFlexOrder(-1), 340);
+    } else {
+      setFlexOrder(0);
+    }
   };
 
   const handleModalOpen = (value) => {
@@ -48,7 +58,7 @@ export default function CategoryCard({
   };
 
   return (
-    <Card className="categoryCard" style={{ order: expanded ? 0 : -1 }}>
+    <Card className="categoryCard" style={{ order: flexOrder }}>
       {/* Modal lives here in navbar */}
       <EditSongModal
         allCategories={allCategories}
