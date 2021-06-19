@@ -8,21 +8,14 @@ import {
   ListItemText,
   Checkbox,
 } from '@material-ui/core';
+
+import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
+import IconButton from '@material-ui/core/IconButton';
+import EditIcon from '@material-ui/icons/Edit';
 import SetlistContext from '../../../stores/setlistContext';
 
-export default function SongsList({ songs }) {
+export default function SongsList({ songs, handleModalOpen }) {
   const { setlistSongs, setSetlistSongs } = useContext(SetlistContext);
-
-  // TODO reactivate this. Disabled to prevent extra DB calls
-  // useEffect(() => {
-  //   fetch(`/.netlify/functions/get-songs-by-category?category=${categoryURL}`)
-  //     .then((res) => res.json())
-  //     .then((songs) => setFetchedSongs(songs))
-  //     .catch((error) => {
-  //       // eslint-disable-next-line no-console
-  //       console.error(error);
-  //     });
-  // }, [categoryURL]);
 
   const handleToggle = (value) => () => {
     const currentIndex = setlistSongs.indexOf(value);
@@ -45,6 +38,7 @@ export default function SongsList({ songs }) {
 
           return (
             <ListItem
+              className="list-item"
               key={value}
               role={undefined}
               dense
@@ -61,13 +55,20 @@ export default function SongsList({ songs }) {
                 />
               </ListItemIcon>
               <ListItemText id={labelId} primary={value} />
+              <ListItemSecondaryAction>
+                <IconButton
+                  onClick={() => handleModalOpen(value)}
+                  edge="end"
+                  aria-label="edit button"
+                >
+                  <EditIcon />
+                </IconButton>
+              </ListItemSecondaryAction>
             </ListItem>
           );
         })
       ) : (
-        // Todo reenable loading spinner
         <ReactLoading type="spin" color="#3f51b5" />
-        // <div>still loadin</div>
       )}
     </List>
   );

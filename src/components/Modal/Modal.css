@@ -14,3 +14,7 @@
 .modal-cancel-button {
   margin-right: 1rem !important;
 }
+
+.modal-delete-button {
+  margin-right: auto !important;
+}

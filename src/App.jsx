@@ -22,7 +22,7 @@ function App() {
           )}
         </div>
       )}
-      {/* TODO maybe build loading indicator if load time is longer than n seconds */}
+      {/* TODO: maybe build loading indicator if load time is longer than n seconds */}
     </div>
   );
 }

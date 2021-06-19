@@ -1,5 +1,13 @@
 #list {
   display: grid;
-  grid-template-rows: repeat(6, auto);
+  grid-template-rows: repeat(5, auto);
   grid-auto-flow: column;
+  grid-auto-rows: 25%;
+  /* grid-template-columns: unset; */
+  /* grid-template-rows: unset; */
+  overflow-x: auto;
+}
+
+.list-item {
+  white-space: nowrap;
 }

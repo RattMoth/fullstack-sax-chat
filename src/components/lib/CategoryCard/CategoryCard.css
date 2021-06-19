@@ -1,9 +1,9 @@
-#categoryCard {
+.categoryCard {
   margin: 1rem;
-  max-width: 90vw;
+  max-width: 80vw;
   align-self: flex-start;
 }
 
-#cardHeader {
+.cardHeader {
   border-bottom: 1px solid black;
 }

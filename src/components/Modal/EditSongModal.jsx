@@ -31,14 +31,16 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function AddSongModal({
-  categories,
+export default function EditSongModal({
+  allCategories,
+  currentCategory,
+  currentSong,
   open,
   handleModalClose,
   update,
 }) {
   const classes = useStyles();
-  const [newSongName, setNewSongName] = useState('');
+  const [songNameInputValue, setSongNameInputValue] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('');
   const [loading, setLoading] = useState(false);
   const [returnedError, setReturnedError] = useState(false);
@@ -48,10 +50,11 @@ export default function AddSongModal({
     if (returnedError) {
       setReturnedError(false);
     }
-    setNewSongName(e.target.value);
+    setSongNameInputValue(e.target.value);
   };
 
   const handleCategorySelect = (e) => {
+    console.log('did it');
     setSelectedCategory(e.target.value);
   };
 
@@ -59,18 +62,20 @@ export default function AddSongModal({
     e.preventDefault();
     handlePopupClose();
     handleModalClose();
-    setSelectedCategory('');
-    setNewSongName('');
+    setSongNameInputValue('');
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    console.log(selectedCategory);
+    console.log(songNameInputValue);
     const songData = {
-      name: newSongName,
-      category: selectedCategory,
+      currentName: currentSong,
+      newName: songNameInputValue,
+      currentCategory: selectedCategory,
     };
     setLoading(true);
-    fetch(' /.netlify/functions/create-song/', {
+    fetch(' /.netlify/functions/update-song/', {
       body: JSON.stringify(songData),
       method: 'POST',
     })
@@ -79,8 +84,10 @@ export default function AddSongModal({
         if (!res.ok) {
           setReturnedError(true);
         } else {
-          setNewSongName('');
           handlePopupOpen();
+          if (currentCategory !== selectedCategory) {
+            update(currentCategory);
+          }
           update(selectedCategory);
         }
       })
@@ -88,6 +95,18 @@ export default function AddSongModal({
         console.log(error);
       });
   };
+
+  const handleDeleteClick = (e) => {
+    // eslint-disable-next-line no-restricted-globals
+    if (confirm(`Are you sure you want to delete ${songNameInputValue}`)) {
+      alert(`made delet of ${songNameInputValue}`);
+    }
+  };
+
+  useEffect(() => {
+    setSelectedCategory(currentCategory);
+    setSongNameInputValue(currentSong);
+  }, [currentCategory, currentSong]);
 
   return (
     <div>
@@ -107,13 +126,13 @@ export default function AddSongModal({
           <div className={classes.paper}>
             <Popup
               handlePopupClose={handlePopupClose}
-              message="Song Successfully Added"
+              message="Song Successfully Updated"
               severity={severityEnum.SUCCESS}
               visible={visible}
             />
-            <h2 id="transition-modal-title">Add Song</h2>
+            <h2 id="transition-modal-title">Edit Song</h2>
             <p id="transition-modal-description">
-              Enter song name and select category from the dropdown.
+              Update song name and/or select a new category from the dropdown.
             </p>
             <form className={classes.root} noValidate autoComplete="off">
               <TextField
@@ -123,7 +142,7 @@ export default function AddSongModal({
                 id="outlined-basic"
                 label="New Song Name"
                 onChange={handleSongNameChange}
-                value={newSongName}
+                value={songNameInputValue}
                 variant="outlined"
               />
               <TextField
@@ -133,13 +152,21 @@ export default function AddSongModal({
                 select
                 value={selectedCategory}
               >
-                {categories?.map((category) => (
+                {allCategories?.map((category) => (
                   <MenuItem key={category.length} value={category}>
                     {category}
                   </MenuItem>
                 ))}
               </TextField>
               <div id="button-flex-container">
+                <Button
+                  className="modal-delete-button"
+                  color="secondary"
+                  onClick={handleDeleteClick}
+                  variant="contained"
+                >
+                  Delete
+                </Button>
                 <Button
                   className="modal-cancel-button"
                   onClick={handleClose}
@@ -149,7 +176,9 @@ export default function AddSongModal({
                 </Button>
                 <Button
                   color="primary"
-                  disabled={!(newSongName && selectedCategory) || loading}
+                  disabled={
+                    !(songNameInputValue && selectedCategory) || loading
+                  }
                   onClick={handleSubmit}
                   variant="contained"
                 >

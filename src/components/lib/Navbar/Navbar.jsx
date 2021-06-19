@@ -83,7 +83,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function Navbar({ categories }) {
+export default function Navbar({ categories, update }) {
   const { user, login } = useContext(AuthContext);
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const classes = useStyles();
@@ -104,6 +104,7 @@ export default function Navbar({ categories }) {
         categories={categories}
         open={modalIsOpen}
         handleModalClose={handleModalClose}
+        update={update}
       />
       {/* End modal */}
       <AppBar position="static">

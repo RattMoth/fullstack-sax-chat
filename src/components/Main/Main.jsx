@@ -12,18 +12,24 @@ export default function Main() {
   const { setlistSongs, setSetlistSongs } = useContext(SetlistContext);
   const [categories, setCategories] = useState([]);
 
-  useEffect(() => {
-    // fetch categories, await value, store in state
-    // once categories are stored, iterate over state array and fetch songs
+  const fetchData = async (specificCategory) => {
+    // TODO: this should be abstracted into multiple functions since it causes two
+    // different behaviors
+    if (specificCategory) {
+      const specificCategoryURL = specificCategory.replaceAll(' ', '+');
+      const specificCategorySongsRes = await fetch(
+        `/.netlify/functions/get-songs-by-category?category=${specificCategoryURL}`
+      );
 
-    const fetchData = async () => {
+      const specificCategorySongs = await specificCategorySongsRes.json();
+      allSongsObj[specificCategory] = [...specificCategorySongs];
+      setAllSongsObj({ ...allSongsObj });
+    } else {
       // Fetch categories and wait for array to be returned
       const categoriesRes = await fetch(
         '/.netlify/functions/get-all-categories'
       );
       const categoriesArr = await categoriesRes.json();
-      // eslint-disable-next-line no-debugger
-      debugger;
       setCategories([...categoriesArr]);
 
       // Now that categories are loaded, iterate through array and fetch songs
@@ -40,7 +46,12 @@ export default function Main() {
         allSongsObj[category] = [...songsArr];
         setAllSongsObj({ ...allSongsObj });
       }
-    };
+    }
+  };
+
+  useEffect(() => {
+    // fetch categories, await value, store in state
+    // once categories are stored, iterate over state array and fetch songs
 
     fetchData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -49,7 +60,7 @@ export default function Main() {
   return (
     <div id="mainContainer" className="grid">
       <header>
-        <Navbar categories={categories} />
+        <Navbar categories={categories} update={fetchData} />
       </header>
 
       <aside className="sidebar-left">
@@ -65,8 +76,15 @@ export default function Main() {
 
       <article>
         {categories ? (
-          categories.map((category) => (
-            <CategoryCard category={category} songs={allSongsObj[category]} />
+          categories.map((category, index) => (
+            <CategoryCard
+              key={category}
+              index={index}
+              allCategories={categories}
+              currentCategory={category}
+              songs={allSongsObj[category]}
+              update={fetchData}
+            />
           ))
         ) : (
           // <ReactLoading type="spin" color="#3f51b5" />
