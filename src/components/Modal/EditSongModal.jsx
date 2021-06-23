@@ -1,3 +1,4 @@
+/* eslint-disable no-alert */
 import React, { useEffect, useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Modal from '@material-ui/core/Modal';
@@ -55,7 +56,6 @@ export default function EditSongModal({
   };
 
   const handleCategorySelect = (e) => {
-    console.log('did it');
     setSelectedCategory(e.target.value);
   };
 
@@ -82,6 +82,7 @@ export default function EditSongModal({
         if (!res.ok) {
           setReturnedError(true);
         } else {
+          handleModalClose();
           handlePopupOpen();
           if (currentCategory !== selectedCategory) {
             update(currentCategory);

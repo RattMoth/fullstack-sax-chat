@@ -1,5 +1,4 @@
 import React, { useContext, useEffect, useState } from 'react';
-// import AuthContext from '../../stores/authContext';
 import ReactLoading from 'react-loading';
 import SetlistContext from '../../stores/setlistContext';
 import CategoryCard from '../lib/CategoryCard/CategoryCard';
@@ -9,7 +8,7 @@ import './Main.css';
 export default function Main() {
   // const { user, login } = useContext(AuthContext);
   const [allSongsObj, setAllSongsObj] = useState({});
-  const { setlistSongs, setSetlistSongs } = useContext(SetlistContext);
+  const { setlistSongs } = useContext(SetlistContext);
   const [categories, setCategories] = useState([]);
 
   const fetchData = async (specificCategory) => {
@@ -87,8 +86,7 @@ export default function Main() {
             />
           ))
         ) : (
-          // <ReactLoading type="spin" color="#3f51b5" />
-          <div>still loadin</div>
+          <ReactLoading type="spin" color="#3f51b5" />
         )}
       </article>
 

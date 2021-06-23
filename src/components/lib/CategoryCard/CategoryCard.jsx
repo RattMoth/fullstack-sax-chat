@@ -24,6 +24,7 @@ export default function CategoryCard({
   const [flexOrder, setFlexOrder] = useState(0);
 
   const ExpandMore = styled((props) => {
+    // eslint-disable-next-line no-unused-vars
     const { expand, ...other } = props;
     // eslint-disable-next-line react/jsx-props-no-spreading
     return <IconButton {...other} />;
@@ -82,6 +83,7 @@ export default function CategoryCard({
           </ExpandMore>
         }
         title={currentCategory}
+        subheader={songs ? `${songs.length} songs` : null}
       />
       <Collapse in={expanded} timeout="auto" unmountOnExit>
         <CardContent>

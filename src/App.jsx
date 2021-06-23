@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext } from 'react';
 import Login from './components/Login/Login';
 import Main from './components/Main/Main';
 import './App.css';
@@ -6,7 +6,7 @@ import AuthContext from './stores/authContext';
 import { SetlistContextProvider } from './stores/setlistContext';
 
 function App() {
-  const { user, login, authReady } = useContext(AuthContext);
+  const { user, authReady } = useContext(AuthContext);
 
   return (
     <div>

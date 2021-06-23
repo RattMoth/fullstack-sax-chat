@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext } from 'react';
 import ReactLoading from 'react-loading';
 import './SongsList.css';
 import {
@@ -10,6 +10,7 @@ import {
 } from '@material-ui/core';
 
 import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
+import ListSubheader from '@material-ui/core/ListSubheader';
 import IconButton from '@material-ui/core/IconButton';
 import EditIcon from '@material-ui/icons/Edit';
 import SetlistContext from '../../../stores/setlistContext';
@@ -32,39 +33,42 @@ export default function SongsList({ songs, handleModalOpen }) {
 
   return (
     <List id="list">
+      <ListSubheader>test</ListSubheader>
       {songs ? (
         songs.map((value) => {
           const labelId = `checkbox-list-label-${value}`;
 
           return (
-            <ListItem
-              className="list-item"
-              key={value}
-              role={undefined}
-              dense
-              button
-              onClick={handleToggle(value)}
-            >
-              <ListItemIcon>
-                <Checkbox
-                  edge="start"
-                  checked={setlistSongs.indexOf(value) !== -1}
-                  tabIndex={-1}
-                  disableRipple
-                  inputProps={{ 'aria-labelledby': labelId }}
-                />
-              </ListItemIcon>
-              <ListItemText id={labelId} primary={value} />
-              <ListItemSecondaryAction>
-                <IconButton
-                  onClick={() => handleModalOpen(value)}
-                  edge="end"
-                  aria-label="edit button"
-                >
-                  <EditIcon />
-                </IconButton>
-              </ListItemSecondaryAction>
-            </ListItem>
+            <>
+              <ListItem
+                className="list-item"
+                key={value}
+                role={undefined}
+                dense
+                button
+                onClick={handleToggle(value)}
+              >
+                <ListItemIcon>
+                  <Checkbox
+                    edge="start"
+                    checked={setlistSongs.indexOf(value) !== -1}
+                    tabIndex={-1}
+                    disableRipple
+                    inputProps={{ 'aria-labelledby': labelId }}
+                  />
+                </ListItemIcon>
+                <ListItemText id={labelId} primary={value} />
+                <ListItemSecondaryAction>
+                  <IconButton
+                    onClick={() => handleModalOpen(value)}
+                    edge="end"
+                    aria-label="edit button"
+                  >
+                    <EditIcon />
+                  </IconButton>
+                </ListItemSecondaryAction>
+              </ListItem>
+            </>
           );
         })
       ) : (

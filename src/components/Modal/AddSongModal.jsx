@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Modal from '@material-ui/core/Modal';
 import Backdrop from '@material-ui/core/Backdrop';
@@ -55,8 +55,7 @@ export default function AddSongModal({
     setSelectedCategory(e.target.value);
   };
 
-  const handleClose = (e) => {
-    e.preventDefault();
+  const handleClose = () => {
     handlePopupClose();
     handleModalClose();
     setSelectedCategory('');
